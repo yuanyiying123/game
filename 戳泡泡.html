@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+     *{
+         padding: 0;
+         margin: 0;
+     }
+     body,html{
+        height: 100%;
+         width:100% 
+     }
+     #container{
+         height: 100%;
+         width:100%;
+         /* background-color: skyblue; */
+         position: relative;
+         background-image: url('images/8.jpg');
+         background-position: center bottom;
+         background-repeat: no-repeat;
+         background-size: cover;
+     }
+     .bubble_item{
+         position: absolute;
+         border-radius: 50%;
+     }
+     #pic{
+         height: 100%;
+         width:100%;
+     }
+     p{
+         color:white;
+         font-size: 30px;
+         padding-top: 10px;
+         margin-left: 10px;
+     }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <p>score:<span>0</span></p>
+    </div>
+    <script src='https://cdn.bootcss.com/jquery/3.4.1/jquery.js'></script>
+    <script>
+        document.body.parentNode.style.overflowY='hidden'
+        document.onselectstart=function(e){
+            e.preventDefault()
+        }
+      var container=document.querySelector('#container')
+      function getcolor(){
+       return 'rgba('+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+','+(Math.random()*0.8+0.2)+')'
+    }
+      class Bubble{
+          constructor(container,x,y,imgSrc){
+              this.container=container
+              this.x=x
+              this.y=y
+              this.sy=0;
+              this.str='';
+              this.imgSrc=imgSrc
+              this.init()
+              this.rander()
+              this.click()
+          }
+          init(){
+              this.sy=Math.random()*4+3 //速度3-7
+          }
+          rander(){
+             this.str=$(`<div class='bubble_item'><img src=${this.imgSrc} id='pic'></div>`)
+            
+             this.container.append(this.str[0])
+             
+          }
+          update(){
+              this.y-=this.sy
+              this.str.css({
+                  'height': '80px',
+                  'width': '60px',
+                  'left': this.x + 'px',
+                  'top': this.y + 'px'
+              })
+              if(this.y<0){
+               this.str[0].remove()
+              }
+          }
+          click(){
+              var _this=this.str[0]
+              _this.onclick=function(){
+                _this.remove()
+                $('span')[0].innerText=parseInt( $('span')[0].innerText)+5
+            } 
+          }
+      }
+        
+      function updates(){
+                var array=[],count=0
+                setInterval(()=>{
+                count++
+                if(count%45==0){
+                  var b=new Bubble(container,Math.random()*1200,650,'images/haha.png')  
+                  var c=new Bubble(container,Math.random()*1200,650,'images/123.png') 
+                  var a=new Bubble(container,Math.random()*1200,650,'images/true.png')  
+                 array.push(b)  
+                 array.push(c)
+                 array.push(a)
+                }
+                if(array.length>20){
+                    array.shift()
+                }
+                for (let i = 0, len = array.length; i < len; i++) {
+                 array[i].update()
+                 
+               }
+                },40)
+      }
+     updates()
+    </script>
+</body>
+</html>

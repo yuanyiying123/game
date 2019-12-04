@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    #myCanvas{
+        margin: 0 auto;
+        display: block;
+        border:1px solid rgb(59, 197, 139);
+        background-color: black;
+    }
+    </style>
+</head>
+<body>
+    <canvas id='myCanvas' width='600' height='600'></canvas>
+    <script>
+         /** @type {HTMLCanvasElement} */ 
+    var canvas = document.querySelector('#myCanvas')
+    var ctx=canvas.getContext('2d')
+    var canvasH=canvas.clientHeight
+    var canvasW=canvas.clientWidth
+    var bull=[]
+    function getcolor(){
+       return 'rgba('+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+','+Math.round(Math.random()*255)+','+(Math.random()*0.8+0.2)+')'
+    }
+    class Bubble{
+        constructor(ctx,x,y){
+            this.ctx=ctx
+            this.x=x;
+            this.y=y
+            this.r=Math.random()*7+8
+            this.sx=0
+            this.sy=0
+            this.g=0.1
+            this.color='skyblue'
+            this.init()
+        }
+        init(){
+            this.sx=Math.random()*4-2
+            this.sy=Math.random()*2-10
+            this.color=getcolor()
+        }
+        render(){
+            this.ctx.beginPath()
+            this.ctx.fillStyle=this.color;
+            this.ctx.arc(this.x,this.y,this.r,0,2*Math.PI,false)
+            this.ctx.fill()
+        }
+        update(){
+            this.sy+=this.g
+            this.y+=this.sy;
+            this.x+=this.sx;
+            this.render()
+        }
+        
+    }
+   
+    function update(){
+         var count=0
+       var timer=setInterval(()=>{
+            count++
+           ctx.clearRect(0,0,canvasW,canvasH)
+           if(count%2==0){ 
+               var b=new Bubble(ctx,canvasW/2,canvasH-20)
+               bull.push(b)
+           }
+          
+           for(let i=0; i<bull.length;i++){
+               bull[i].update()
+           }
+           if(bull.length>70){
+               bull.shift()
+           }
+        },20)
+    }
+    update()
+    </script>
+
+</body>
+</html>
